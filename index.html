@@ -171,6 +171,22 @@ h1 em{font-style:normal;color:var(--red)}
 .soon-close{font:inherit;color:var(--ink);cursor:pointer;border:2px solid var(--red);background:linear-gradient(#5a0910,#2a0408);padding:.8rem 2.2rem;border-radius:6px;box-shadow:0 0 18px rgba(229,19,31,.6),inset 0 0 12px rgba(229,19,31,.35);transition:box-shadow .2s}
 .soon-close:hover{box-shadow:0 0 28px rgba(229,19,31,.95),inset 0 0 16px rgba(229,19,31,.5)}
 
+/* ARTICLE POST + EMPTY STATES */
+.post{max-width:920px}
+.post .thumb{aspect-ratio:21/6}
+.post-body{padding:1.8rem 2rem 2.2rem;display:flex;flex-direction:column;gap:1rem}
+.post-title{font-family:var(--disp);font-weight:400;font-size:clamp(1.9rem,4vw,3rem);line-height:1.1;letter-spacing:.02em;text-transform:uppercase}
+.post-title .glitch::before,.post-title .glitch::after{white-space:normal}
+.post-meta{font-family:var(--mono);font-size:.8rem;color:var(--mut)}
+.post-body p{font-size:1.1rem;line-height:1.8;max-width:68ch}
+.post-body p.gl{display:block}
+.post-body strong{color:#fff}
+.tags{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.6rem}
+.tags li{font-family:var(--mono);font-size:.85rem;color:#ff6a73;border:1px solid rgba(229,19,31,.6);padding:.35rem .8rem;border-radius:999px}
+.empty{font-family:var(--mono);font-size:.95rem;color:var(--mut);text-align:center;padding:2.6rem 1rem;border:1px dashed rgba(229,19,31,.45)}
+.empty.gl{display:block}
+@media (max-width:640px){.post-body{padding:1.3rem 1.2rem 1.6rem}}
+
 /* GLITCH ON TEXT */
 .gl{display:inline-block;animation:g-mini 4s steps(1) infinite}
 .nav nav a.gl,.btn.gl,.btn-join.gl{display:inline-flex}
@@ -217,7 +233,7 @@ h1 em{font-style:normal;color:var(--red)}
       <li><a href="#about">About</a></li>
     </ul>
   </nav>
-  <a class="btn-join" href="#newsletter">Subscribe <span aria-hidden="true">↗</span></a>
+  <a class="btn-join" href="https://t.me/+SMArYx7eTTxmOTY0" target="_blank" rel="noopener">Join Telegram <span aria-hidden="true">↗</span></a>
 </header>
 
 <main>
@@ -254,75 +270,36 @@ h1 em{font-style:normal;color:var(--red)}
     </ul>
   </section>
 
-  <!-- FEATURED -->
-  <section class="section" id="featured">
-    <div class="sec-head"><h2>Featured <em>story</em></h2><a class="more" href="#articles">All articles ↗</a></div>
-    <div class="feat">
-      <div class="cw"><a class="card" href="#"><div class="card-in">
-        <div class="thumb t1"><span class="tag">Machine Learning</span></div>
-        <div class="body">
-          <h3>How a Random Forest Actually Decides: A Visual Walkthrough</h3>
-          <p>Follow a single row of data through every tree, see where the votes split, and learn why the forest is more stable than any one tree.</p>
-          <div class="meta"><span>Oct 28, 2026</span><span>12 min read</span></div>
-        </div>
-      </div></a></div>
-      <aside class="trend" aria-label="Trending">
-        <h3>Trending this week</h3>
-        <ol>
-          <li><a href="#"><b>1</b><div><span>Pandas vs Polars: Benchmarks on 50 Million Rows</span><small>Python · 9 min read</small></div></a></li>
-          <li><a href="#"><b>2</b><div><span>Spotting Data Leakage Before It Ruins Your Model</span><small>Machine Learning · 8 min read</small></div></a></li>
-          <li><a href="#"><b>3</b><div><span>SQL Window Functions You Will Use Every Day</span><small>SQL · 7 min read</small></div></a></li>
-          <li><a href="#"><b>4</b><div><span>A Practical Guide to Securing Your ML Pipeline</span><small>Cybersecurity · 11 min read</small></div></a></li>
-        </ol>
-      </aside>
-    </div>
-  </section>
-
   <!-- ARTICLES -->
   <section class="section" id="articles">
     <div class="sec-head"><h2>Latest <em>articles</em></h2><a class="more" href="#">Archive ↗</a></div>
-    <div class="chips" id="chips" role="group" aria-label="Filter articles by topic">
-      <button class="chip" data-filter="all" aria-pressed="true">All</button>
-      <button class="chip" data-filter="Python" aria-pressed="false">Python</button>
-      <button class="chip" data-filter="Machine Learning" aria-pressed="false">Machine Learning</button>
-      <button class="chip" data-filter="Statistics" aria-pressed="false">Statistics</button>
-      <button class="chip" data-filter="Cybersecurity" aria-pressed="false">Cybersecurity</button>
-      <button class="chip" data-filter="Analytics" aria-pressed="false">Analytics</button>
-    </div>
-    <ul class="grid" id="article-grid">
-      <li data-cat="Python"><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t2"><span class="tag">Python</span></div><div class="body"><h3>Clean Messy Data with Pandas in 10 Steps</h3><p>A repeatable checklist for missing values, duplicates, bad types and outliers.</p><div class="meta"><span>Oct 25, 2026</span><span>8 min read</span></div></div></div></a></div></li>
-      <li data-cat="Machine Learning"><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t3"><span class="tag">Machine Learning</span></div><div class="body"><h3>Gradient Boosting Explained Without the Math Headache</h3><p>How each new tree fixes the mistakes of the last one, and which settings matter.</p><div class="meta"><span>Oct 21, 2026</span><span>11 min read</span></div></div></div></a></div></li>
-      <li data-cat="Statistics"><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t4"><span class="tag">Statistics</span></div><div class="body"><h3>P-Values and Confidence Intervals: What They Really Mean</h3><p>Plain-language answers to the questions every analyst gets wrong at least once.</p><div class="meta"><span>Oct 18, 2026</span><span>9 min read</span></div></div></div></a></div></li>
-      <li data-cat="Cybersecurity"><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t1"><span class="tag">Cybersecurity</span></div><div class="body"><h3>Threat Modeling for Data Teams</h3><p>Map where your data can leak, from ingestion to dashboards, and fix the biggest gaps first.</p><div class="meta"><span>Oct 14, 2026</span><span>10 min read</span></div></div></div></a></div></li>
-      <li data-cat="Analytics"><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t2"><span class="tag">Analytics</span></div><div class="body"><h3>Build a Dashboard Stakeholders Actually Open</h3><p>Choose the right three metrics, design for a 30-second read, and skip the clutter.</p><div class="meta"><span>Oct 10, 2026</span><span>7 min read</span></div></div></div></a></div></li>
-      <li data-cat="Python"><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t3"><span class="tag">Python</span></div><div class="body"><h3>Time Series Forecasting with Prophet and statsmodels</h3><p>Compare both libraries on the same dataset and learn when each one wins.</p><div class="meta"><span>Oct 6, 2026</span><span>13 min read</span></div></div></div></a></div></li>
-    </ul>
+    <div class="post cw"><div class="card"><div class="card-in">
+      <div class="thumb t1"><span class="tag">Announcement</span></div>
+      <div class="post-body">
+        <h3 class="post-title"><span class="glitch" data-text="DS-Society — The Home of Data">DS-Society — The Home of Data</span></h3>
+        <p class="post-meta">Nov 2, 2026 · 1 min read</p>
+        <p>Salam! Welcome to <strong>DS-Society — The Home of Data</strong>.</p>
+        <p>Where data meets curiosity, mathematics meets discovery, and raw numbers become meaningful insights.</p>
+        <p>From Structural Algebra to Inferential Statistics, we explore the hidden structures, patterns, and relationships within your data to get closer to the truth behind the numbers.</p>
+        <p>We respect the 17-08 law, of course… but let's be honest: <span class="red">WE ALWAYS HAVE OUR OWN WAY.</span></p>
+        <p>Because data is more than numbers. It's a language, a challenge, and an opportunity to see things differently.</p>
+        <p>Stay curious. Think critically. Question everything.</p>
+        <p>Expect our next articles.</p>
+        <ul class="tags"><li>#DSSociety</li><li>#DataScience</li><li>#Statistics</li><li>#Mathematics</li><li>#ThinkDifferently</li></ul>
+      </div>
+    </div></div></div>
   </section>
 
   <!-- VIDEOS -->
   <section class="section" id="videos">
     <div class="sec-head"><h2>Latest <em>videos</em></h2><a class="more" href="#">YouTube channel ↗</a></div>
-    <ul class="grid v">
-      <li><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t4"><span class="play"><i></i></span><span class="dur">24:10</span></div><div class="body"><h3>Build a Neural Network from Scratch</h3><div class="meta"><span>Oct 27, 2026</span><span>Tutorial</span></div></div></div></a></div></li>
-      <li><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t1"><span class="play"><i></i></span><span class="dur">31:45</span></div><div class="body"><h3>SQL for Data Science in 30 Minutes</h3><div class="meta"><span>Oct 20, 2026</span><span>Crash course</span></div></div></div></a></div></li>
-      <li><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t3"><span class="play"><i></i></span><span class="dur">18:22</span></div><div class="body"><h3>Exploratory Data Analysis, Live</h3><div class="meta"><span>Oct 13, 2026</span><span>Live coding</span></div></div></div></a></div></li>
-      <li><div class="cw"><a class="card" href="#"><div class="card-in"><div class="thumb t2"><span class="play"><i></i></span><span class="dur">27:03</span></div><div class="body"><h3>Intro to Ethical Hacking for Data People</h3><div class="meta"><span>Oct 5, 2026</span><span>Tutorial</span></div></div></div></a></div></li>
-    </ul>
+    <p class="empty">// no videos yet</p>
   </section>
 
   <!-- NEWSLETTER -->
   <section class="section" id="newsletter">
-    <div class="news">
-      <div>
-        <h2>Get the weekly digest</h2>
-        <p>One email every Friday with the best new articles, videos and code notebooks.</p>
-      </div>
-      <form id="news-form" novalidate>
-        <input type="email" id="email" name="email" placeholder="you@example.com" aria-label="Email address" required>
-        <button type="submit">Subscribe</button>
-        <p class="msg" id="msg" role="status"></p>
-      </form>
-    </div>
+    <div class="sec-head"><h2><em>Newsletter</em></h2></div>
+    <p class="empty">// nothing here yet</p>
   </section>
 </main>
 
@@ -339,7 +316,7 @@ h1 em{font-style:normal;color:var(--red)}
       <li><a href="#" aria-label="X"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.200 2h3.300l-7.200 8.300L22.800 22h-6.600l-5.200-6.800L5 22H1.700l7.700-8.800L1.300 2H8l4.700 6.200Zm-1.200 18h1.800L7.100 3.900H5.200Z"/></svg></a></li>
     </ul>
     </div>
-    <div><h4>Read</h4><ul><li><a href="#articles">Articles</a></li><li><a href="#featured">Featured</a></li><li><a href="#newsletter">Newsletter</a></li></ul></div>
+    <div><h4>Read</h4><ul><li><a href="#articles">Articles</a></li><li><a href="#newsletter">Newsletter</a></li></ul></div>
     <div><h4>Watch</h4><ul><li><a href="#videos">Latest videos</a></li><li><a href="#">Playlists</a></li><li><a href="#">YouTube channel</a></li></ul></div>
     <div><h4>About</h4><ul><li><a href="#">Our story</a></li><li><a href="#">Write for us</a></li><li><a href="#">Contact</a></li></ul></div>
   </div>
@@ -367,7 +344,7 @@ if (reduce) { el.textContent = text; }
 else { let i = 0; const tick = () => { el.textContent = text.slice(0, ++i); if (i < text.length) setTimeout(tick, 70); }; setTimeout(tick, 600); }
 
 // Random glitch timing on key text
-document.querySelectorAll('.nav nav a,.btn-join,.brand-text,.tagline,.sub,.hero .btn,.slogan,.scroll span,.prompt,.sec-head h2').forEach(t=>{
+document.querySelectorAll('.nav nav a,.btn-join,.brand-text,.tagline,.sub,.hero .btn,.slogan,.scroll span,.prompt,.sec-head h2,.post-body p,.tags li,.empty').forEach(t=>{
   t.classList.add('gl');
   t.style.animationDuration=(3+Math.random()*4).toFixed(2)+'s';
   t.style.animationDelay=(-Math.random()*6).toFixed(2)+'s';
@@ -382,20 +359,6 @@ const nav = document.querySelector('.nav');
 const onScroll = () => nav.classList.toggle('solid', window.scrollY > 40);
 onScroll(); addEventListener('scroll', onScroll, { passive: true });
 
-// Filter articles by topic
-const chips = document.querySelectorAll('.chip');
-chips.forEach(c => c.addEventListener('click', () => {
-  chips.forEach(x => x.setAttribute('aria-pressed', x === c));
-  const f = c.dataset.filter;
-  document.querySelectorAll('#article-grid li').forEach(li => { li.hidden = f !== 'all' && li.dataset.cat !== f; });
-}));
-
-// Newsletter (demo: connect a real email service to store addresses)
-document.getElementById('news-form').addEventListener('submit', e => {
-  e.preventDefault();
-  const v = document.getElementById('email').value.trim();
-  document.getElementById('msg').textContent = /^\S+@\S+\.\S+$/.test(v) ? 'Thanks! Check your inbox to confirm.' : 'Enter a valid email address.';
-});
 
 // Coming-soon window: opens on any click on the site
 const BLOCK_ACTIONS = true; // true: links and buttons only open the window. false: they also work normally.
@@ -417,6 +380,7 @@ document.addEventListener('click', e => {
     if (e.target === soon || e.target.closest('.soon-close')) closeSoon();
     return;
   }
+  if (e.target.closest('.btn-join')) return; // Join Telegram always works
   if (BLOCK_ACTIONS) e.preventDefault();
   openSoon();
 }, true);
