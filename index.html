@@ -187,6 +187,24 @@ h1 em{font-style:normal;color:var(--red)}
 .empty.gl{display:block}
 @media (max-width:640px){.post-body{padding:1.3rem 1.2rem 1.6rem}}
 
+/* ARTICLE VIDEO */
+#post-stage{position:relative}
+.post-video-wrap{position:absolute;inset:0;z-index:5;display:grid;place-items:center;background:#000}
+.post-video-wrap[hidden]{display:none}
+/* red scan-line layer over the video */
+.post-video-wrap::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+ background:
+  linear-gradient(180deg,transparent,rgba(255,42,54,.4) 50%,transparent) 0 -40%/100% 30% no-repeat,
+  repeating-linear-gradient(0deg,rgba(229,19,31,.3) 0 1px,transparent 1px 4px),
+  radial-gradient(ellipse at center,transparent 55%,rgba(5,2,4,.55) 100%),
+  linear-gradient(rgba(140,5,15,.18),rgba(140,5,15,.18));
+ animation:vid-scan 5s linear infinite}
+@keyframes vid-scan{from{background-position:0 -40%,0 0,0 0,0 0}to{background-position:0 140%,0 0,0 0,0 0}}
+.post-video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+.video-missing{padding:4rem 1.5rem;text-align:center;font-family:var(--mono);color:#ff6a73}
+.swap{animation:swap .5s steps(1) 1}
+@keyframes swap{0%{translate:-10px 0;opacity:.3;filter:hue-rotate(40deg)}25%{translate:8px 0;opacity:1}50%{translate:-5px 0;filter:none}75%{translate:3px 0}100%{translate:0 0}}
+
 /* GLITCH ON TEXT */
 .gl{display:inline-block;animation:g-mini 4s steps(1) infinite}
 .nav nav a.gl,.btn.gl,.btn-join.gl{display:inline-flex}
@@ -273,7 +291,8 @@ h1 em{font-style:normal;color:var(--red)}
   <!-- ARTICLES -->
   <section class="section" id="articles">
     <div class="sec-head"><h2>Latest <em>articles</em></h2><a class="more" href="#">Archive ↗</a></div>
-    <div class="post cw"><div class="card"><div class="card-in">
+    <div class="post cw"><div class="card"><div class="card-in" id="post-stage">
+      <div class="post-text" id="post-text">
       <div class="thumb t1"><span class="tag">Announcement</span></div>
       <div class="post-body">
         <h3 class="post-title"><span class="glitch" data-text="DS-Society — The Home of Data">DS-Society — The Home of Data</span></h3>
@@ -281,11 +300,18 @@ h1 em{font-style:normal;color:var(--red)}
         <p>Salam! Welcome to <strong>DS-Society — The Home of Data</strong>.</p>
         <p>Where data meets curiosity, mathematics meets discovery, and raw numbers become meaningful insights.</p>
         <p>From Structural Algebra to Inferential Statistics, we explore the hidden structures, patterns, and relationships within your data to get closer to the truth behind the numbers.</p>
-        <p>We respect the law, of course… but let's be honest: <span class="red">WE ALWAYS HAVE OUR OWN WAY.</span></p>
+        <p>We respect the 17-08 law, of course… but let's be honest: <span class="red">WE ALWAYS HAVE OUR OWN WAY.</span></p>
         <p>Because data is more than numbers. It's a language, a challenge, and an opportunity to see things differently.</p>
         <p>Stay curious. Think critically. Question everything.</p>
         <p>Expect our next articles.</p>
         <ul class="tags"><li>#DSSociety</li><li>#DataScience</li><li>#Statistics</li><li>#Mathematics</li><li>#ThinkDifferently</li></ul>
+      </div>
+      </div>
+      <div class="post-video-wrap" id="post-video-wrap" hidden>
+        <video class="post-video" id="post-video" controls playsinline preload="metadata">
+          <source src="assets/article.mp4" type="video/mp4">
+        </video>
+        <p class="video-missing" id="video-missing" hidden>Video not found. Put your file at assets/article.mp4</p>
       </div>
     </div></div></div>
   </section>
@@ -329,7 +355,7 @@ h1 em{font-style:normal;color:var(--red)}
       <img class="soon-logo" id="soon-logo" alt="La Casa de Data logo">
       <h2 id="soon-title">Coming soon</h2><br>
       <span class="soon-status">Registration opens soon</span>
-      <p>Dobri din, hna La Casa de Data, Don't touch anything for now ! to join the community, click on the button top right corner - telegram - </p>
+      <p>Dobri din, hna La Casa de Data, lazem ykon 3andek compte bach ta9der t'accidi l wach ak hab, registration 9rib yafathou</p>
       <button type="button" class="soon-close">Close</button>
     </div></div>
   </div>
@@ -380,7 +406,7 @@ document.addEventListener('click', e => {
     if (e.target === soon || e.target.closest('.soon-close')) closeSoon();
     return;
   }
-  if (e.target.closest('.btn-join')) return; // Join Telegram always works
+  if (e.target.closest('.btn-join, .post-video-wrap')) return; // Telegram button and the article video always work
   if (BLOCK_ACTIONS) e.preventDefault();
   openSoon();
 }, true);
@@ -389,6 +415,47 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeSoon();
   if (e.key === 'Tab') { e.preventDefault(); soonClose.focus(); }
 });
+
+// Article area: text first, then the video after TEXT_SECONDS; when the video ends the text returns.
+// Testing tip: add ?t=5 to the page address to wait only 5 seconds instead of 2 minutes.
+const TEXT_SECONDS = Number(new URLSearchParams(location.search).get('t')) || 120;
+const postStage = document.getElementById('post-stage');
+const postText = document.getElementById('post-text');
+const postVideoWrap = document.getElementById('post-video-wrap');
+const postVideo = document.getElementById('post-video');
+const videoMissingMsg = document.getElementById('video-missing');
+let textTimer, videoBroken = false;
+function flash() { postStage.classList.remove('swap'); void postStage.offsetWidth; postStage.classList.add('swap'); }
+function scheduleVideo() { clearTimeout(textTimer); textTimer = setTimeout(showVideo, TEXT_SECONDS * 1000); }
+function videoMissing() { return videoBroken || !!postVideo.error || postVideo.networkState === HTMLMediaElement.NETWORK_NO_SOURCE; }
+function showVideo() {
+  flash();
+  postText.style.visibility = 'hidden'; // keeps the card the same size so the video fills it exactly
+  postVideoWrap.hidden = false;
+  if (videoMissing()) {
+    console.warn('article video not found: put your file at assets/article.mp4');
+    videoMissingMsg.hidden = false;
+    postVideo.style.display = 'none';
+    clearTimeout(textTimer);
+    textTimer = setTimeout(showText, 6000);
+    return;
+  }
+  videoMissingMsg.hidden = true;
+  postVideo.style.display = '';
+  postVideo.currentTime = 0;
+  postVideo.muted = false;
+  postVideo.play().catch(() => { postVideo.muted = true; postVideo.play().catch(() => {}); });
+}
+function showText() {
+  postVideo.pause();
+  flash();
+  postVideoWrap.hidden = true;
+  postText.style.visibility = '';
+  scheduleVideo();
+}
+postVideo.addEventListener('ended', showText);
+postVideo.querySelector('source').addEventListener('error', () => { videoBroken = true; });
+scheduleVideo();
 </script>
 </body>
 </html>
