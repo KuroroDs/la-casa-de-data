@@ -296,7 +296,7 @@ h1 em{font-style:normal;color:var(--red)}
 .tv::before,.tv::after{content:"";position:absolute;z-index:-1;bottom:100%;width:4px;height:70px;border-radius:2px;background:linear-gradient(#6b5558,#2a1c1f);transform-origin:bottom center}
 .tv::before{left:40%;transform:rotate(-26deg)}
 .tv::after{left:58%;transform:rotate(26deg)}
-.tv-screen{position:relative;aspect-ratio:4/3;border-radius:26px/22px;overflow:hidden;background:#050204;box-shadow:inset 0 0 40px rgba(0,0,0,.9),0 0 0 3px #000,0 0 0 4px #2a1215;animation:tv-flick 5s steps(1) infinite}
+.tv-screen{position:relative;aspect-ratio:4/3;border-radius:26px/22px;overflow:hidden;background:#050204;box-shadow:inset 0 0 40px rgba(0,0,0,.9),0 0 0 3px #000,0 0 0 4px #2a1215;transition:aspect-ratio .4s;animation:tv-flick 5s steps(1) infinite}
 .tv-noise{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;opacity:.8}
 .tv-bars{position:absolute;inset:0;display:flex;opacity:0;filter:saturate(.85) brightness(.8);animation:tv-bars 7s steps(1) infinite}
 .tv-bars i{flex:1}
@@ -314,6 +314,16 @@ h1 em{font-style:normal;color:var(--red)}
 .tv-brand{font-family:var(--disp);font-size:.85rem;letter-spacing:.22em;color:#6b5558}
 .tv-knobs{display:flex;gap:.7rem}
 .tv-knobs i{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a3639,#150a0c);border:1px solid #000;box-shadow:0 2px 4px rgba(0,0,0,.7)}
+.tv-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;opacity:0;filter:contrast(1.08) saturate(.9)}
+.tv-screen.playing .tv-vid{opacity:1}
+.tv-screen.playing .tv-msg,.tv-screen.playing .tv-bars{display:none}
+.tv-os.br{bottom:7%;right:6%;display:none}
+.tv-screen.playing .tv-os.br{display:block}
+.tv-knobs i{position:relative}
+.tv-knobs i::after{content:"";position:absolute;left:50%;top:3px;width:2px;height:6px;background:#8a6f73;transform:translateX(-50%)}
+.tv-knob{display:flex;padding:0;border:0;background:none;border-radius:50%;cursor:pointer}
+.tv-knob:hover i{box-shadow:0 0 10px rgba(229,19,31,.8),0 2px 4px rgba(0,0,0,.7)}
+.tv-knob[aria-pressed="true"] i::after{background:var(--hot);box-shadow:0 0 6px var(--hot)}
 @keyframes tv-flick{0%,92%,100%{filter:none}93%{filter:brightness(1.5) contrast(1.2)}95%{filter:brightness(.7)}97%{filter:none}}
 @keyframes tv-bars{0%,93%,100%{opacity:0;transform:none}94%{opacity:.85;transform:translateX(-8px)}96%{opacity:0}97%{opacity:.6;transform:translateX(6px) skewX(3deg)}98.5%{opacity:0}}
 @keyframes tv-roll{from{transform:translateY(-120%)}to{transform:translateY(520%)}}
@@ -666,10 +676,10 @@ scheduleVideo();
   // ---- Edit these ----
   // Wrap a word in *asterisks* to highlight it in red.
   const NEWS_MESSAGES = [
-    '*DS-Society* is on Telegram ...',
+    '*DS-Society* is online...',
     'Welcome to La Casa de Data.',
     'A new digital experience is coming...',
-    'Stay connected. Stay Focused.',
+    'Stay connected. Stay anonymous.',
     'DS-Society — *Wake Up!*'
   ];
   const BRANDS = [
@@ -797,6 +807,9 @@ scheduleVideo();
   // time is optional ('' = all day). note is optional.
   const PLANS_UPDATED = ''; // e.g. '2026-11-10' shows "Updated Nov 10, 2026"
   const WEEK_START = 0;     // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  // The TV plays these videos one after another, with NO SIGNAL between them, in a loop.
+  const TV_VIDEOS = ['assets/tv1.mp4', 'assets/tv2.mp4'];
+  const NOSIGNAL_MS = 5000; // how long NO SIGNAL shows between videos
   const PLANS = [
     // { date: '2026-11-10', time: '18:00', type: 'article', status: 'planned', title: 'Your first plan', note: 'Optional details' },
   ];
@@ -848,11 +861,13 @@ scheduleVideo();
     });
     io.observe(cv);
   }
-  function makeTV(title, sub) {
+  function makeTV(title, sub, playlist) {
     const wrap = h('div', 'tv-wrap');
     const tv = h('div', 'tv'); tv.setAttribute('role', 'status');
     const screen = h('div', 'tv-screen');
     const cv = h('canvas', 'tv-noise'); cv.width = 160; cv.height = 120; cv.setAttribute('aria-hidden', 'true');
+    let vid = null;
+    if (playlist) { vid = h('video', 'tv-vid'); vid.muted = true; vid.playsInline = true; vid.preload = 'metadata'; vid.setAttribute('aria-hidden', 'true'); }
     const bars = h('div', 'tv-bars'); bars.setAttribute('aria-hidden', 'true');
     ['#c0c0c0', '#c0c000', '#00c0c0', '#00c000', '#c000c0', '#c00000', '#0000c0'].forEach(c => { const i = h('i'); i.style.background = c; bars.appendChild(i); });
     const roll = h('div', 'tv-roll'); roll.setAttribute('aria-hidden', 'true');
@@ -861,15 +876,70 @@ scheduleVideo();
     const t = h('div', 'tv-title'); const g = h('span', 'glitch', title); g.setAttribute('data-text', title); t.appendChild(g);
     msg.appendChild(t); msg.appendChild(h('div', 'tv-sub', '> ' + sub));
     const scan = h('div', 'tv-scan'); scan.setAttribute('aria-hidden', 'true');
-    [['tl', 'CH 03'], ['tr', 'AV 1'], ['bl', '\u25B6 STAND BY']].forEach(([c, x]) => { const o = h('span', 'tv-os ' + c, x); o.setAttribute('aria-hidden', 'true'); screen.appendChild(o); });
-    [cv, bars, roll, tear, msg, scan].forEach(n => screen.appendChild(n));
-    const bar = h('div', 'tv-ctl'); bar.setAttribute('aria-hidden', 'true');
-    bar.appendChild(h('i', 'tv-led')); bar.appendChild(h('span', 'tv-brand', 'DS-SOCIETY'));
-    const kn = h('span', 'tv-knobs'); kn.appendChild(h('i')); kn.appendChild(h('i')); bar.appendChild(kn);
+    const osd = [['tl', 'CH 03'], ['tr', 'AV 1'], ['bl', '\u25B6 STAND BY']];
+    if (playlist) osd.push(['br', 'MUTE']);
+    osd.forEach(([c, x]) => { const o = h('span', 'tv-os ' + c, x); o.setAttribute('aria-hidden', 'true'); screen.appendChild(o); });
+    [cv, vid, bars, roll, tear, msg, scan].filter(Boolean).forEach(n => screen.appendChild(n));
+    const bar = h('div', 'tv-ctl');
+    const led = h('i', 'tv-led'); led.setAttribute('aria-hidden', 'true');
+    const brand = h('span', 'tv-brand', 'DS-SOCIETY'); brand.setAttribute('aria-hidden', 'true');
+    const kn = h('span', 'tv-knobs');
+    if (playlist) { const k = h('button', 'tv-knob'); k.type = 'button'; k.setAttribute('aria-label', 'Sound'); k.setAttribute('aria-pressed', 'false'); k.appendChild(h('i')); kn.appendChild(k); }
+    else { const i = h('i'); i.setAttribute('aria-hidden', 'true'); kn.appendChild(i); }
+    const i2 = h('i'); i2.setAttribute('aria-hidden', 'true'); kn.appendChild(i2);
+    [led, brand, kn].forEach(n => bar.appendChild(n));
     tv.appendChild(screen); tv.appendChild(bar); wrap.appendChild(tv);
     return wrap;
   }
-  function showTV(title, sub) { const el = makeTV(title, sub); view.appendChild(el); startNoise(el.querySelector('canvas')); }
+
+  /* ---- TV playlist: NO SIGNAL (5 s) -> video 1 -> NO SIGNAL -> video 2 -> ... forever ---- */
+  let tvStop = null;
+  function stopTV() { if (tvStop) { tvStop(); tvStop = null; } }
+  function runTV(el, cv) {
+    const screen = el.querySelector('.tv-screen'), vid = el.querySelector('.tv-vid');
+    const osd = el.querySelector('.tv-os.bl'), snd = el.querySelector('.tv-os.br'), knob = el.querySelector('.tv-knob');
+    const n = TV_VIDEOS.length, bad = new Set();
+    let i = 0, phase = 'signal', timer = 0, visible = false;
+    const jolt = () => { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); };
+    function signal(first) {
+      phase = 'signal'; vid.pause(); screen.classList.remove('playing'); osd.textContent = '\u25B6 STAND BY';
+      if (!first) jolt();
+      startNoise(cv);
+      if (bad.size < n) timer = setTimeout(play, NOSIGNAL_MS); // if every file is missing, stay on static
+    }
+    function play() {
+      while (bad.has(i)) i = (i + 1) % n;
+      phase = 'video'; stopNoise(); jolt();
+      vid.src = TV_VIDEOS[i]; screen.classList.add('playing'); osd.textContent = '\u25B6 PLAY';
+      if (visible && !document.hidden) vid.play().catch(() => {});
+    }
+    // the screen takes the video's own proportions, so nothing is cropped (clamped to a sensible range)
+    vid.addEventListener('loadedmetadata', () => {
+      if (!vid.videoWidth || !vid.videoHeight) return;
+      screen.style.aspectRatio = Math.min(2.4, Math.max(0.75, vid.videoWidth / vid.videoHeight)).toFixed(4);
+    });
+    vid.addEventListener('ended', () => { if (phase !== 'video') return; i = (i + 1) % n; signal(); });
+    vid.addEventListener('error', () => { if (phase !== 'video') return; bad.add(i); i = (i + 1) % n; signal(); });
+    const io2 = new IntersectionObserver(es => {
+      visible = es[0].isIntersecting;
+      if (phase === 'video') { if (visible && !document.hidden) vid.play().catch(() => {}); else vid.pause(); }
+    });
+    io2.observe(el);
+    const onVis = () => { if (phase === 'video') { if (document.hidden) vid.pause(); else if (visible) vid.play().catch(() => {}); } };
+    document.addEventListener('visibilitychange', onVis);
+    if (knob) knob.addEventListener('click', () => {
+      vid.muted = !vid.muted; knob.setAttribute('aria-pressed', String(!vid.muted));
+      snd.textContent = vid.muted ? 'MUTE' : 'SOUND ON';
+    });
+    tvStop = () => { clearTimeout(timer); vid.pause(); vid.removeAttribute('src'); vid.load(); io2.disconnect(); document.removeEventListener('visibilitychange', onVis); };
+    signal(true);
+  }
+  function showTV(title, sub, playlist) {
+    const useList = playlist && TV_VIDEOS.length && !rm.matches; // reduced motion: static screen only
+    const el = makeTV(title, sub, useList); view.appendChild(el);
+    const cv = el.querySelector('canvas');
+    if (useList) runTV(el, cv); else startNoise(cv);
+  }
 
   /* ---- helpers ---- */
   function rangeOf() { if (mode === 'week') { const s = startOfWeek(cursor); return [s, addDays(s, 6)]; } return [cursor, cursor]; }
@@ -921,10 +991,10 @@ scheduleVideo();
   }
 
   function render() {
-    stopNoise(); view.replaceChildren();
+    stopNoise(); stopTV(); view.replaceChildren();
     if (!PLANS.length) { // nothing posted yet: whole section is "no signal"
       ctl.hidden = true; sumEl.hidden = true;
-      showTV('No signal', 'Plans transmission offline. Stand by');
+      showTV('No signal', 'Plans transmission offline. Stand by', true);
       return;
     }
     ctl.hidden = false;
