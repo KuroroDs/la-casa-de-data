@@ -249,6 +249,77 @@ h1 em{font-style:normal;color:var(--red)}
 .foot li a:hover{color:var(--ink)}
 .copy{max-width:1500px;margin:0 auto;padding:1.4rem 6rem 2rem;font-family:var(--mono);font-size:.8rem;color:var(--mut);border-top:1px solid rgba(255,255,255,.08)}
 
+/* PLANS (month / week / day tracker) */
+.plans-ctl{display:flex;align-items:center;justify-content:space-between;gap:1rem 1.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.plans-ctl .chips{margin:0}
+.nav-chips{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.chip.sq{padding:.5rem .9rem;font-size:1rem;line-height:1}
+.range{font-family:var(--disp);font-weight:400;font-size:1.5rem;letter-spacing:.03em;text-transform:uppercase;min-width:11ch;text-align:center}
+.psum{display:flex;align-items:center;gap:.8rem 1.4rem;flex-wrap:wrap;margin-bottom:1.4rem;font-family:var(--mono);font-size:.8rem;color:var(--mut)}
+.pbar{flex:1;min-width:140px;height:8px;border:1px solid rgba(229,19,31,.5);background:rgba(20,3,8,.6)}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#8a0a14,var(--hot));box-shadow:0 0 10px rgba(255,42,54,.7);transition:width .4s}
+.legend{display:flex;gap:1rem;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.legend span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sc)}
+.s-planned{--sc:#c9bfc0}.s-doing{--sc:var(--blue)}.s-done{--sc:var(--hot)}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.8rem}
+.wcol{display:flex;flex-direction:column;min-height:220px;border:1px solid rgba(229,19,31,.35);background:rgba(20,3,8,.6)}
+.wcol.today{border-color:var(--red);box-shadow:0 0 16px rgba(229,19,31,.4)}
+.whead{font:inherit;font-family:var(--mono);font-size:.78rem;color:var(--mut);text-align:left;background:transparent;border:0;border-bottom:1px solid rgba(229,19,31,.35);padding:.7rem .8rem;cursor:pointer}
+.whead:hover{background:rgba(229,19,31,.14)}
+.whead b{display:block;font-family:var(--disp);font-weight:400;font-size:1.5rem;color:var(--ink)}
+.wbody{display:flex;flex-direction:column;gap:.5rem;padding:.6rem;flex:1}
+.wi{border-left:3px solid var(--sc);padding:.45rem .6rem;background:rgba(255,255,255,.05);font-size:.85rem;line-height:1.35;overflow-wrap:anywhere}
+.wi small{display:block;margin-top:.2rem;font-family:var(--mono);font-size:.68rem;color:var(--mut)}
+.wempty{font-family:var(--mono);font-size:.72rem;color:rgba(201,191,192,.5)}
+.dl{display:flex;flex-direction:column;gap:1rem}
+.di{display:grid;grid-template-columns:6.5rem 1fr auto;gap:1.2rem;align-items:start;padding:1.2rem 1.4rem;border:1px solid rgba(229,19,31,.35);border-left:4px solid var(--sc);background:linear-gradient(160deg,#1f040a,#0a0204 70%)}
+.di time{font-family:var(--disp);font-size:1.6rem;line-height:1.1}
+.di h3{font-size:1.15rem;line-height:1.3;font-weight:600}
+.di p{color:var(--mut);font-size:.95rem;line-height:1.55;margin-top:.3rem}
+.di .tg{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end}
+.ptag{--sc:#ff6a73}
+.ptag,.pst{font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border:1px solid var(--sc);color:var(--sc);white-space:nowrap}
+@media (max-width:1100px){.wk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){
+ .range{font-size:1.2rem;min-width:0;flex:1}
+ .nav-chips{width:100%}
+ .wk{grid-template-columns:1fr}.wcol{min-height:0}
+ .di{grid-template-columns:1fr;gap:.5rem}
+ .di .tg{justify-content:flex-start}
+}
+
+.plans-ctl[hidden],.psum[hidden]{display:none}
+/* NO SIGNAL (old TV) */
+.tv-wrap{display:flex;justify-content:center;padding:4.2rem 0 1rem}
+.tv{position:relative;isolation:isolate;width:min(680px,100%);padding:20px 20px 14px;border-radius:34px;background:linear-gradient(160deg,#241114,#0b0506 60%,#1a0b0e);border:2px solid #2a1215;box-shadow:0 0 34px rgba(229,19,31,.35),inset 0 0 18px rgba(0,0,0,.8),inset 0 2px 0 rgba(255,255,255,.06)}
+.tv::before,.tv::after{content:"";position:absolute;z-index:-1;bottom:100%;width:4px;height:70px;border-radius:2px;background:linear-gradient(#6b5558,#2a1c1f);transform-origin:bottom center}
+.tv::before{left:40%;transform:rotate(-26deg)}
+.tv::after{left:58%;transform:rotate(26deg)}
+.tv-screen{position:relative;aspect-ratio:4/3;border-radius:26px/22px;overflow:hidden;background:#050204;box-shadow:inset 0 0 40px rgba(0,0,0,.9),0 0 0 3px #000,0 0 0 4px #2a1215;animation:tv-flick 5s steps(1) infinite}
+.tv-noise{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;opacity:.8}
+.tv-bars{position:absolute;inset:0;display:flex;opacity:0;filter:saturate(.85) brightness(.8);animation:tv-bars 7s steps(1) infinite}
+.tv-bars i{flex:1}
+.tv-roll{position:absolute;left:0;right:0;top:0;height:22%;pointer-events:none;background:linear-gradient(transparent,rgba(255,255,255,.14),transparent);animation:tv-roll 6s linear infinite}
+.tv-tear{position:absolute;left:0;right:0;top:30%;height:5px;opacity:0;background:rgba(255,255,255,.4);mix-blend-mode:overlay;animation:tv-tear 3.1s steps(1) infinite}
+.tv-scan{position:absolute;inset:0;z-index:4;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.75) 100%),linear-gradient(rgba(140,5,15,.12),rgba(140,5,15,.12))}
+.tv-msg{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:1rem;text-align:center}
+.tv-title{font-family:var(--disp);font-weight:400;font-size:clamp(2.2rem,9vw,4.4rem);letter-spacing:.08em;line-height:1.05;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:.35rem 1rem .25rem}
+.tv-title .glitch{white-space:normal}
+.tv-sub{font-family:var(--mono);font-size:clamp(.68rem,2.3vw,.92rem);letter-spacing:.12em;color:#ff6a73;background:rgba(0,0,0,.6);padding:.3rem .7rem}
+.tv-os{position:absolute;z-index:3;font-family:var(--mono);font-size:clamp(.62rem,2vw,.9rem);letter-spacing:.1em;color:#e8f6ff;text-shadow:2px 0 rgba(255,34,48,.7),-2px 0 rgba(45,155,255,.6)}
+.tv-os.tl{top:6%;left:6%}.tv-os.tr{top:6%;right:6%}.tv-os.bl{bottom:7%;left:6%}
+.tv-ctl{display:flex;align-items:center;justify-content:space-between;padding:.9rem .4rem 0}
+.tv-led{width:9px;height:9px;border-radius:50%;background:var(--hot);box-shadow:0 0 8px var(--hot);animation:tag-blink 1.4s ease-in-out infinite}
+.tv-brand{font-family:var(--disp);font-size:.85rem;letter-spacing:.22em;color:#6b5558}
+.tv-knobs{display:flex;gap:.7rem}
+.tv-knobs i{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a3639,#150a0c);border:1px solid #000;box-shadow:0 2px 4px rgba(0,0,0,.7)}
+@keyframes tv-flick{0%,92%,100%{filter:none}93%{filter:brightness(1.5) contrast(1.2)}95%{filter:brightness(.7)}97%{filter:none}}
+@keyframes tv-bars{0%,93%,100%{opacity:0;transform:none}94%{opacity:.85;transform:translateX(-8px)}96%{opacity:0}97%{opacity:.6;transform:translateX(6px) skewX(3deg)}98.5%{opacity:0}}
+@keyframes tv-roll{from{transform:translateY(-120%)}to{transform:translateY(520%)}}
+@keyframes tv-tear{0%,70%,100%{opacity:0}72%{opacity:1;top:34%;transform:translateX(-12px)}74%{opacity:1;top:61%;transform:translateX(10px)}76%{opacity:0}88%{opacity:1;top:82%;transform:translateX(-8px)}90%{opacity:0}}
+@media (max-width:640px){.tv-wrap{padding-top:3.4rem}.tv{padding:12px 12px 10px;border-radius:24px}.tv-screen{border-radius:18px/16px}.tv::before,.tv::after{height:52px}}
+
 /* COMING SOON WINDOW */
 .soon{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:1.2rem;background:rgba(2,0,1,.8);backdrop-filter:blur(6px);animation:soon-in .25s ease-out}
 .soon[hidden]{display:none}
@@ -356,6 +427,7 @@ h1 em{font-style:normal;color:var(--red)}
     <ul>
       <li><a class="active" href="#top">Home</a></li>
       <li><a href="#articles">Articles</a></li>
+      <li><a href="#plans">Plans</a></li>
       <li><a href="#videos">Videos</a></li>
       <li><a href="#newsletter">Newsletter</a></li>
       <li><a href="#about">About</a></li>
@@ -426,6 +498,25 @@ h1 em{font-style:normal;color:var(--red)}
     </div></div></div>
   </section>
 
+  <!-- PLANS -->
+  <section class="section plans" id="plans">
+    <div class="sec-head"><h2>Our <em>plans</em></h2><span class="more" id="plans-updated"></span></div>
+    <div class="plans-ctl">
+      <div class="chips" role="group" aria-label="Plan view">
+        <button type="button" class="chip" data-view="week" aria-pressed="true">Week</button>
+        <button type="button" class="chip" data-view="day" aria-pressed="false">Day</button>
+      </div>
+      <div class="nav-chips">
+        <button type="button" class="chip sq" id="p-prev" aria-label="Previous">&#8249;</button>
+        <h3 class="range" id="p-range" aria-live="polite"></h3>
+        <button type="button" class="chip sq" id="p-next" aria-label="Next">&#8250;</button>
+        <button type="button" class="chip" id="p-today">Today</button>
+      </div>
+    </div>
+    <div class="psum" id="p-sum"></div>
+    <div id="plans-view"></div>
+  </section>
+
   <!-- VIDEOS -->
   <section class="section" id="videos">
     <div class="sec-head"><h2>Latest <em>videos</em></h2><a class="more" href="#">YouTube channel ↗</a></div>
@@ -452,7 +543,7 @@ h1 em{font-style:normal;color:var(--red)}
       <li><a href="#" aria-label="X"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.200 2h3.300l-7.200 8.300L22.800 22h-6.600l-5.200-6.800L5 22H1.700l7.700-8.800L1.300 2H8l4.700 6.200Zm-1.200 18h1.800L7.100 3.900H5.200Z"/></svg></a></li>
     </ul>
     </div>
-    <div><h4>Read</h4><ul><li><a href="#articles">Articles</a></li><li><a href="#newsletter">Newsletter</a></li></ul></div>
+    <div><h4>Read</h4><ul><li><a href="#articles">Articles</a></li><li><a href="#plans">Plans</a></li><li><a href="#newsletter">Newsletter</a></li></ul></div>
     <div><h4>Watch</h4><ul><li><a href="#videos">Latest videos</a></li><li><a href="#">Playlists</a></li><li><a href="#">YouTube channel</a></li></ul></div>
     <div><h4>About</h4><ul><li><a href="#">Our story</a></li><li><a href="#">Write for us</a></li><li><a href="#">Contact</a></li></ul></div>
   </div>
@@ -516,7 +607,7 @@ document.addEventListener('click', e => {
     if (e.target === soon || e.target.closest('.soon-close')) closeSoon();
     return;
   }
-  if (e.target.closest('.btn-join, .post-video-wrap, .newsbar, .nb-panel')) return; // Telegram button and the article video always work
+  if (e.target.closest('.btn-join, .post-video-wrap, .newsbar, .nb-panel, .plans, a[href="#plans"]')) return; // Telegram button and the article video always work
   if (BLOCK_ACTIONS) e.preventDefault();
   openSoon();
 }, true);
@@ -575,10 +666,10 @@ scheduleVideo();
   // ---- Edit these ----
   // Wrap a word in *asterisks* to highlight it in red.
   const NEWS_MESSAGES = [
-    '*DS-Society* is on Telegram...',
+    '*DS-Society* is on Telegram ...',
     'Welcome to La Casa de Data.',
     'A new digital experience is coming...',
-    'Stay connected. Stay with no ID.',
+    'Stay connected. Stay Focused.',
     'DS-Society — *Wake Up!*'
   ];
   const BRANDS = [
@@ -692,6 +783,168 @@ scheduleVideo();
   addEventListener('pagehide', clearAll);
   render(0);
   schedule();
+})();
+</script>
+
+<script>
+/* ===== PLANS TRACKER (week / day) ===== */
+(function () {
+  'use strict';
+  // ---- Edit your plans here ----
+  // While PLANS is empty, visitors see the "NO SIGNAL" TV screen.
+  // Copy the example line, remove the // and fill it in.
+  // status: 'planned' | 'doing' | 'done'     type: 'article' | 'video' | 'live' | 'research'
+  // time is optional ('' = all day). note is optional.
+  const PLANS_UPDATED = ''; // e.g. '2026-11-10' shows "Updated Nov 10, 2026"
+  const WEEK_START = 0;     // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  const PLANS = [
+    // { date: '2026-11-10', time: '18:00', type: 'article', status: 'planned', title: 'Your first plan', note: 'Optional details' },
+  ];
+  // -------------------------------
+
+  const STATUS = { planned: 'Planned', doing: 'In progress', done: 'Done' };
+  const TYPES = { article: 'Article', video: 'Video', live: 'Live', research: 'Research' };
+  const view = document.getElementById('plans-view');
+  const rangeEl = document.getElementById('p-range');
+  const sumEl = document.getElementById('p-sum');
+  const ctl = document.querySelector('.plans-ctl');
+  const viewBtns = document.querySelectorAll('.plans .chips [data-view]');
+  const rm = matchMedia('(prefers-reduced-motion: reduce)');
+  if (!view) return;
+
+  const pad = n => String(n).padStart(2, '0');
+  const key = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const parse = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const startOfWeek = d => addDays(d, -((d.getDay() - WEEK_START + 7) % 7));
+  const fmt = (d, o) => d.toLocaleDateString('en-US', o);
+  function h(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  const byDate = {};
+  PLANS.slice().sort((a, b) => (a.time || '99').localeCompare(b.time || '99') || a.title.localeCompare(b.title))
+    .forEach(it => (byDate[it.date] = byDate[it.date] || []).push(it));
+  const itemsOn = d => byDate[key(d)] || [];
+
+  let mode = 'week';
+  let cursor = new Date(); cursor = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate());
+
+  /* ---- old-TV static (canvas noise, paused when off-screen) ---- */
+  let raf = 0, io = null;
+  function stopNoise() { cancelAnimationFrame(raf); raf = 0; if (io) { io.disconnect(); io = null; } }
+  function startNoise(cv) {
+    const ctx = cv.getContext('2d'); if (!ctx) return;
+    const img = ctx.createImageData(cv.width, cv.height), buf = new Uint32Array(img.data.buffer);
+    const frame = () => {
+      for (let i = 0; i < buf.length; i++) { const v = (Math.random() * 170) | 0, g = (v * 0.7) | 0; buf[i] = 0xFF000000 | (g << 16) | (g << 8) | v; }
+      ctx.putImageData(img, 0, 0);
+    };
+    frame();
+    if (rm.matches) return; // one still frame
+    let last = 0;
+    const loop = t => { raf = requestAnimationFrame(loop); if (t - last < 80) return; last = t; frame(); };
+    io = new IntersectionObserver(es => {
+      if (es[0].isIntersecting) { if (!raf) raf = requestAnimationFrame(loop); }
+      else { cancelAnimationFrame(raf); raf = 0; }
+    });
+    io.observe(cv);
+  }
+  function makeTV(title, sub) {
+    const wrap = h('div', 'tv-wrap');
+    const tv = h('div', 'tv'); tv.setAttribute('role', 'status');
+    const screen = h('div', 'tv-screen');
+    const cv = h('canvas', 'tv-noise'); cv.width = 160; cv.height = 120; cv.setAttribute('aria-hidden', 'true');
+    const bars = h('div', 'tv-bars'); bars.setAttribute('aria-hidden', 'true');
+    ['#c0c0c0', '#c0c000', '#00c0c0', '#00c000', '#c000c0', '#c00000', '#0000c0'].forEach(c => { const i = h('i'); i.style.background = c; bars.appendChild(i); });
+    const roll = h('div', 'tv-roll'); roll.setAttribute('aria-hidden', 'true');
+    const tear = h('div', 'tv-tear'); tear.setAttribute('aria-hidden', 'true');
+    const msg = h('div', 'tv-msg');
+    const t = h('div', 'tv-title'); const g = h('span', 'glitch', title); g.setAttribute('data-text', title); t.appendChild(g);
+    msg.appendChild(t); msg.appendChild(h('div', 'tv-sub', '> ' + sub));
+    const scan = h('div', 'tv-scan'); scan.setAttribute('aria-hidden', 'true');
+    [['tl', 'CH 03'], ['tr', 'AV 1'], ['bl', '\u25B6 STAND BY']].forEach(([c, x]) => { const o = h('span', 'tv-os ' + c, x); o.setAttribute('aria-hidden', 'true'); screen.appendChild(o); });
+    [cv, bars, roll, tear, msg, scan].forEach(n => screen.appendChild(n));
+    const bar = h('div', 'tv-ctl'); bar.setAttribute('aria-hidden', 'true');
+    bar.appendChild(h('i', 'tv-led')); bar.appendChild(h('span', 'tv-brand', 'DS-SOCIETY'));
+    const kn = h('span', 'tv-knobs'); kn.appendChild(h('i')); kn.appendChild(h('i')); bar.appendChild(kn);
+    tv.appendChild(screen); tv.appendChild(bar); wrap.appendChild(tv);
+    return wrap;
+  }
+  function showTV(title, sub) { const el = makeTV(title, sub); view.appendChild(el); startNoise(el.querySelector('canvas')); }
+
+  /* ---- helpers ---- */
+  function rangeOf() { if (mode === 'week') { const s = startOfWeek(cursor); return [s, addDays(s, 6)]; } return [cursor, cursor]; }
+  function label() {
+    if (mode === 'day') return fmt(cursor, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    const [a, b] = rangeOf();
+    return fmt(a, { month: 'short', day: 'numeric' }) + ' \u2013 ' + fmt(b, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function bar(done, total) { const b = h('div', 'pbar'); const i = h('i'); i.style.width = (total ? Math.round(done / total * 100) : 0) + '%'; b.appendChild(i); return b; }
+  function legend() { const l = h('div', 'legend'); Object.keys(STATUS).forEach(k => l.appendChild(h('span', 's-' + k, STATUS[k]))); return l; }
+  function renderSummary(items) {
+    sumEl.replaceChildren(); sumEl.hidden = !items.length; if (!items.length) return;
+    const done = items.filter(p => p.status === 'done').length;
+    sumEl.appendChild(h('span', null, done + ' of ' + items.length + ' done'));
+    sumEl.appendChild(bar(done, items.length)); sumEl.appendChild(legend());
+  }
+  function goTo(d, m) { cursor = d; mode = m; render(); }
+
+  function renderWeek() {
+    const wk = h('div', 'wk'); const start = startOfWeek(cursor); const tk = key(new Date());
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(start, i), items = itemsOn(d);
+      const col = h('div', 'wcol'); if (key(d) === tk) col.classList.add('today');
+      const hd = h('button', 'whead', fmt(d, { weekday: 'long' })); hd.type = 'button';
+      hd.appendChild(h('b', null, fmt(d, { month: 'short', day: 'numeric' })));
+      hd.addEventListener('click', () => goTo(d, 'day'));
+      col.appendChild(hd);
+      const body = h('div', 'wbody');
+      if (!items.length) body.appendChild(h('span', 'wempty', '\u2014 nothing planned'));
+      items.forEach(it => {
+        const w = h('div', 'wi s-' + it.status, it.title);
+        w.appendChild(h('small', null, (it.time ? it.time + ' \u00B7 ' : '') + TYPES[it.type] + ' \u00B7 ' + STATUS[it.status]));
+        body.appendChild(w);
+      });
+      col.appendChild(body); wk.appendChild(col);
+    }
+    view.appendChild(wk);
+  }
+  function renderDay() {
+    const list = h('div', 'dl');
+    itemsOn(cursor).forEach(it => {
+      const row = h('article', 'di s-' + it.status);
+      row.appendChild(h('time', null, it.time || 'ALL DAY'));
+      const mid = h('div'); mid.appendChild(h('h3', null, it.title)); if (it.note) mid.appendChild(h('p', null, it.note)); row.appendChild(mid);
+      const tg = h('div', 'tg'); tg.appendChild(h('span', 'ptag', TYPES[it.type])); tg.appendChild(h('span', 'pst s-' + it.status, STATUS[it.status])); row.appendChild(tg);
+      list.appendChild(row);
+    });
+    view.appendChild(list);
+  }
+
+  function render() {
+    stopNoise(); view.replaceChildren();
+    if (!PLANS.length) { // nothing posted yet: whole section is "no signal"
+      ctl.hidden = true; sumEl.hidden = true;
+      showTV('No signal', 'Plans transmission offline. Stand by');
+      return;
+    }
+    ctl.hidden = false;
+    viewBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === mode)));
+    rangeEl.textContent = label();
+    const [a, b] = rangeOf(); const ak = key(a), bk = key(b);
+    const inRange = PLANS.filter(p => p.date >= ak && p.date <= bk);
+    renderSummary(inRange);
+    if (!inRange.length) { showTV('No signal', 'Nothing scheduled for this ' + mode); return; }
+    if (mode === 'week') renderWeek(); else renderDay();
+  }
+
+  function step(dir) { cursor = addDays(cursor, dir * (mode === 'week' ? 7 : 1)); render(); }
+  viewBtns.forEach(b => b.addEventListener('click', () => { mode = b.dataset.view; render(); }));
+  document.getElementById('p-prev').addEventListener('click', () => step(-1));
+  document.getElementById('p-next').addEventListener('click', () => step(1));
+  document.getElementById('p-today').addEventListener('click', () => { const n = new Date(); cursor = new Date(n.getFullYear(), n.getMonth(), n.getDate()); render(); });
+  const up = document.getElementById('plans-updated');
+  if (up) { up.hidden = !PLANS_UPDATED; if (PLANS_UPDATED) up.textContent = 'Updated ' + fmt(parse(PLANS_UPDATED), { month: 'short', day: 'numeric', year: 'numeric' }); }
+  render();
 })();
 </script>
 </body>
